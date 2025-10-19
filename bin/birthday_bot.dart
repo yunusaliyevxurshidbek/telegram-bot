@@ -29,6 +29,9 @@ void main() async {
   final me = await telegram.getMe();
   final userName = me.username;
 
+  const bool testMode = true;
+
+
   // teledart_init:
   final teleDart = TeleDart(botToken, Event(userName!));
   teleDart.start();
@@ -362,40 +365,69 @@ void main() async {
     }
   });
 
-// checking_every_day_at_01:00 (Asia/Tashkent local time)
-  Timer.periodic(const Duration(minutes: 1), (_) async {
-    try {
-      final nowUtc = DateTime.now().toUtc();
-      final tashkentTime = nowUtc.add(const Duration(hours: 5));
 
-      final isOneAM = tashkentTime.hour == 1 && tashkentTime.minute == 0;
+  // checking_every_day_at_01:00 (Asia/Tashkent local time)
+  Timer.periodic(
+    testMode ? const Duration(seconds: 30) : const Duration(minutes: 1),
+        (_) async {
+      try {
+        final nowUtc = DateTime.now().toUtc();
+        final tashkentTime = nowUtc.add(const Duration(hours: 5));
 
-      if (isOneAM) {
-        print("🕐 Tashkent time: ${tashkentTime.toIso8601String()} — sending birthday messages...");
+        if (testMode) {
+          // TEST REJIMI — har 30 soniyada bugungi sanalarni yuboradi
+          print("⏱ Test rejimi: ${tashkentTime.toIso8601String()} da tekshirildi.");
 
-        final todayList = await api.getToday();
+          final todayList = await api.getToday();
 
-        if (todayList.isNotEmpty) {
-          for (final b in todayList) {
-            await telegram.sendMessage(
-              groupId,
-              '🎉🎂 <b>Tug‘ilgan kun muborak!</b>\n\n'
-                  '🎊 Bugun <b>${b.name}</b>ning tug‘ilgan kuni!\n'
-                  '🎁 Ezgu tilaklar bilan 💐\n'
-                  '😡 Tez hamma tabriklasin! Hattoki siz ham 😡',
-              parseMode: 'HTML',
-            );
+          if (todayList.isNotEmpty) {
+            for (final b in todayList) {
+              await telegram.sendMessage(
+                groupId,
+                '🎉🎂 <b>Tug‘ilgan kun muborak!</b>\n\n'
+                    '🎊 Bugun <b>${b.name}</b>ning tug‘ilgan kuni!\n'
+                    '🎁 Ezgu tilaklar bilan 💐\n'
+                    '😡 Tez hamma tabriklasin! Hattoki siz ham 😡',
+                parseMode: 'HTML',
+              );
+            }
+          } else {
+            print("📭 Test rejimi: bugun tug‘ilgan kun yo‘q");
           }
         } else {
-          print("📭 Bugun tug‘ilgan kun yo‘q (Tashkent time: ${tashkentTime.toIso8601String()})");
-        }
+          // PRODUCTION REJIMI — faqat soat 01:00 da
+          final isOneAM = tashkentTime.hour == 1 && tashkentTime.minute == 0;
 
-        await Future.delayed(const Duration(minutes: 1));
+          if (isOneAM) {
+            print("🕐 Tashkent time: ${tashkentTime.toIso8601String()} — sending birthday messages...");
+
+            final todayList = await api.getToday();
+
+            if (todayList.isNotEmpty) {
+              for (final b in todayList) {
+                await telegram.sendMessage(
+                  groupId,
+                  '🎉🎂 <b>Tug‘ilgan kun muborak!</b>\n\n'
+                      '🎊 Bugun <b>${b.name}</b>ning tug‘ilgan kuni!\n'
+                      '🎁 Ezgu tilaklar bilan 💐\n'
+                      '😡 Tez hamma tabriklasin! Hattoki siz ham 😡',
+                  parseMode: 'HTML',
+                );
+              }
+            } else {
+              print("📭 Bugun tug‘ilgan kun yo‘q (Tashkent time: ${tashkentTime.toIso8601String()})");
+            }
+
+            // 1 daqiqa kutadi, qayta yubormaslik uchun
+            await Future.delayed(const Duration(minutes: 1));
+          }
+        }
+      } catch (e) {
+        print("⚠️ Timer error: $e");
       }
-    } catch (e) {
-      print("⚠️ Timer error: $e");
-    }
-  });
+    },
+  );
+
 
 
 }
