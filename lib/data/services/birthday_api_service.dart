@@ -5,7 +5,6 @@ import '../models/birthday.dart';
 class BirthdayApiService {
   final baseUrl = "https://portfolio-backend-ac0m.onrender.com/tgapi/birthdays/";
 
-  // 📋 GET: Barcha tug‘ilgan kunlar
   Future<List<Birthday>> getBirthdays() async {
     final res = await http.get(Uri.parse(baseUrl));
 
@@ -17,7 +16,6 @@ class BirthdayApiService {
     }
   }
 
-  // ➕ POST: Yangi tug‘ilgan kun qo‘shish
   Future<void> addBirthday(String name, String date) async {
     final res = await http.post(
       Uri.parse(baseUrl),
@@ -29,7 +27,6 @@ class BirthdayApiService {
     }
   }
 
-  // ❌ DELETE: Tug‘ilgan kunni o‘chirish
   Future<void> deleteBirthday(int id) async {
     final res = await http.delete(Uri.parse("$baseUrl$id/"));
     if (res.statusCode != 204) {
@@ -37,7 +34,6 @@ class BirthdayApiService {
     }
   }
 
-  // 📊 GET: Statistika
   Future<Map<String, dynamic>> getStats() async {
     final res = await http.get(Uri.parse("${baseUrl}stats/"));
     if (res.statusCode == 200) {
@@ -47,7 +43,6 @@ class BirthdayApiService {
     }
   }
 
-  // 🎂 GET: Bugungi tug‘ilganlar
   Future<List<Birthday>> getToday() async {
     final res = await http.get(Uri.parse("${baseUrl}today/"));
     if (res.statusCode == 200) {
