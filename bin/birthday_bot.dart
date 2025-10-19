@@ -22,7 +22,7 @@ void main() async {
   const botToken = "8437865387:AAHjGFZWHkULFT2y6xQD1618_8UOgL6UXIA";
 
   // group_id:
-  const groupId = -1002949488056;
+  const groupId = -1002481910630;
 
 
   final telegram = Telegram(botToken);
