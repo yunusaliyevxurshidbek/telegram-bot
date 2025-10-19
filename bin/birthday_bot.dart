@@ -8,7 +8,6 @@ import 'package:teledart/model.dart';
 void main() async {
 
   // admin_id:
-  // const adminId = 5505290719;
   const List<int> adminIds = [5505290719, 1234567890];
 
   // bloc_setup:
@@ -23,7 +22,7 @@ void main() async {
   const botToken = "8437865387:AAHjGFZWHkULFT2y6xQD1618_8UOgL6UXIA";
 
   // group_id:
-  const groupId = 1002481910630;
+  const groupId = -1002949488056;
 
 
   final telegram = Telegram(botToken);
@@ -98,6 +97,15 @@ void main() async {
 
   // /start
   teleDart.onCommand('start').listen((message) async {
+
+    if (message.chat.type == "group" || message.chat.type == "supergroup") {
+      await telegram.sendMessage(
+        message.chat.id,
+               'ℹ️ Bu buyruq faqat shaxsiy chatda ishlaydi.\n'
+              'Iltimos, botga shaxsiy xabar yozing 👉 @x_birthday_reminder_bot',
+      );
+      return;
+    }
     if (!isAdmin(message.from?.id)) {
       message.reply('⛔ Bu bot faqat admin uchun!');
       return;
@@ -320,8 +328,9 @@ void main() async {
             '📋 <b>Ro‘yxat</b> — barcha ma’lumotlarni ko‘rish\n'
             '🗑 <b>O‘chirish</b> — ma’lumotni o‘chirish\n'
             '📊 <b>Statistika</b> — umumiy ma’lumotlar\n\n'
-            '🤖 Bot har kuni avtomatik ravishda guruhga eslatma yuboradi!',
-        InlineKeyboardMarkup(inlineKeyboard: [
+            '🤖 Bot har kuni avtomatik ravishda guruhga eslatma yuboradi!'
+            '👤 <b>Creator</b> — @xurshidbek_006 takliflar bo\'lsa',
+          InlineKeyboardMarkup(inlineKeyboard: [
           [InlineKeyboardButton(text: '🔙 Orqaga', callbackData: 'back_main')]
         ]),
       );
@@ -339,7 +348,6 @@ void main() async {
       );
       await query.answer(text: '🔄 Yangilandi!');
     }
-
 
     // back:
     else if (data == 'back_main' || data == 'cancel') {
