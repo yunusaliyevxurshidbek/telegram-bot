@@ -29,7 +29,7 @@ void main() async {
   final me = await telegram.getMe();
   final userName = me.username;
 
-  const bool testMode = true;
+  const bool testMode = false;
 
 
   // teledart_init:
@@ -366,7 +366,7 @@ void main() async {
   });
 
 
-  // checking_every_day_at_01:00 (Asia/Tashkent local time)
+  // checking_every_day_at_01:00:
   Timer.periodic(
     testMode ? const Duration(seconds: 30) : const Duration(minutes: 1),
         (_) async {
@@ -375,7 +375,7 @@ void main() async {
         final tashkentTime = nowUtc.add(const Duration(hours: 5));
 
         if (testMode) {
-          // TEST REJIMI — har 30 soniyada bugungi sanalarni yuboradi
+
           print("⏱ Test rejimi: ${tashkentTime.toIso8601String()} da tekshirildi.");
 
           final todayList = await api.getToday();
@@ -384,9 +384,9 @@ void main() async {
             for (final b in todayList) {
               await telegram.sendMessage(
                 groupId,
-                '🎉🎂 <b>Tug‘ilgan kun muborak!</b>\n\n'
-                    '🎊 Bugun <b>${b.name}</b>ning tug‘ilgan kuni!\n'
-                    '🎁 Ezgu tilaklar bilan 💐\n'
+                '🎂 <b>${b.name}</b>ga bugungi kunda eng ezgu tilaklar! 💫\n\n'
+                    '✨ Hayotingizda yangi yutuqlar, quvonch va muvaffaqiyatlar tilaymiz!\n'
+                    '🎉 Tug‘ilgan kun muborak bo‘lsin! 🎉\n'
                     '😡 Tez hamma tabriklasin! Hattoki siz ham 😡',
                 parseMode: 'HTML',
               );
@@ -395,7 +395,6 @@ void main() async {
             print("📭 Test rejimi: bugun tug‘ilgan kun yo‘q");
           }
         } else {
-          // PRODUCTION REJIMI — faqat soat 01:00 da
           final isOneAM = tashkentTime.hour == 1 && tashkentTime.minute == 0;
 
           if (isOneAM) {
@@ -407,9 +406,10 @@ void main() async {
               for (final b in todayList) {
                 await telegram.sendMessage(
                   groupId,
-                  '🎉🎂 <b>Tug‘ilgan kun muborak!</b>\n\n'
-                      '🎊 Bugun <b>${b.name}</b>ning tug‘ilgan kuni!\n'
-                      '🎁 Ezgu tilaklar bilan 💐\n'
+                  '🎂 <b>${b.name}</b>ga bugungi kunda eng ezgu tilaklar! 💫\n\n'
+                      '✨ Hayotingizda yangi yutuqlar, quvonch va muvaffaqiyatlar tilaymiz!\n'
+                      '🎉 Tug‘ilgan kun muborak bo‘lsin! 🎉\n'
+
                       '😡 Tez hamma tabriklasin! Hattoki siz ham 😡',
                   parseMode: 'HTML',
                 );
@@ -418,7 +418,6 @@ void main() async {
               print("📭 Bugun tug‘ilgan kun yo‘q (Tashkent time: ${tashkentTime.toIso8601String()})");
             }
 
-            // 1 daqiqa kutadi, qayta yubormaslik uchun
             await Future.delayed(const Duration(minutes: 1));
           }
         }
