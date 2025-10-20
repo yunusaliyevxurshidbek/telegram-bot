@@ -8,7 +8,7 @@ import 'package:teledart/model.dart';
 void main() async {
 
   // admin_id:
-  const List<int> adminIds = [5505290719, 1234567890];
+  const List<int> adminIds = [5505290719, 7847026426];
 
   // bloc_setup:
   final bloc = BirthdayBloc(BirthdayApiService());
