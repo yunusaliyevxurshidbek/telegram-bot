@@ -1,7 +1,7 @@
 # ==========================
 # 📦 Stage 1 — Build stage
 # ==========================
-FROM dart:3.9.2 AS build
+FROM dart:stable AS build
 
 # Loyihamizni ichiga kiramiz
 WORKDIR /app
